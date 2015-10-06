@@ -91,7 +91,7 @@ module.exports = ($, config, gulp) => {
         .pipe(gulp.dest(config.paths.dist.js))
     )
 
-    gulp.task('webserver:dist', () => require(`../${config.paths.server}/server-dist.js`)(config))
+    gulp.task('webserver:dist', () => require(`../${config.paths.server}/dist.js`)(config))
 
     gulp.task('dist', (cb) => $.runSequence('generateOneScriptFile', 'compress', 'clean:min', cb))
 }
