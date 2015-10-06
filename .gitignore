@@ -1,6 +1,7 @@
 *.sublime-project
 *.sublime-workspace
-_analysis/
-_deploy/
-_public-dist/
-node_modules/
+.tmp/analysis
+.tmp/deploy
+dist
+node_modules
+bower_components
