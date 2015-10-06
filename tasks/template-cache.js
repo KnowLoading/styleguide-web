@@ -1,12 +1,15 @@
-module.exports = ($) => {
-    'use strict'
+'use strict'
 
-    $.gulp.task('templateCache', (done) =>
-        $.gulp
-        .src([`${$.deploy.dir}/**/directives/**/*.html`])
-        .pipe($.templateCache('templates.js', {
+import templateCache from 'gulp-angular-templatecache'
+
+module.exports = ($, config, gulp) => {
+    gulp.task('templateCache', (done) => {
+        gulp
+        .src([`${config.paths.deploy.base}/**/directives/**/*.html`])
+        .pipe(templateCache('templates.js', {
             standalone: true
         }))
-        .pipe($.gulp.dest($.deploy.js))
-    )
+        .pipe(gulp.dest(config.paths.deploy.js))
+        done()
+    })
 }

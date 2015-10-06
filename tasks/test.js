@@ -1,25 +1,29 @@
-module.exports = ($) => {
-    'use strict'
+'use strict'
 
-    $.gulp.task('scripts-js-test', () =>
-        $.gulp
+module.exports = ($, config, gulp) => {
+
+    const CLIENT_PATH = config.paths.client.base;
+    const DEPLOY_PATH = config.paths.deploy.base;
+
+    gulp.task('scripts-test', () =>
+        gulp
         .src([
-            `${$.client.dir}/**/*.config.js`,
-            `${$.client.dir}/**/*.spec.js`
+            `${CLIENT_PATH}/**/*.config.js`,
+            `${CLIENT_PATH}/**/*.spec.js`
         ])
-        .pipe($.changed($.deploy.dir))
+        .pipe($.changed(DEPLOY_PATH))
         .pipe($.babel())
-        .pipe($.gulp.dest($.deploy.dir))
+        .pipe(gulp.dest(DEPLOY_PATH))
     )
 
-    $.gulp.task('karma', (done) =>
+    gulp.task('karma', (done) =>
         $.karma.start({
             configFile: $.path.resolve(__dirname, '../karma.conf.js')
         }, () => done)
     )
 
-    $.gulp.watch([
-        `${$.client.dir}/**/*.config.js`,
-        `${$.client.dir}/**/*.spec.js`
-    ], ['scripts-js-test'])
+    gulp.watch([
+        `${CLIENT_PATH}/**/*.config.js`,
+        `${CLIENT_PATH}/**/*.spec.js`
+    ], ['scripts-test'])
 }

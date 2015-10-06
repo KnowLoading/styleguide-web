@@ -1,7 +1,6 @@
 *.sublime-project
 *.sublime-workspace
-.tmp/analysis
-.tmp/deploy
+.tmp
 dist
 node_modules
 bower_components

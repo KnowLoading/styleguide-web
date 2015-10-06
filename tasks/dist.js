@@ -1,90 +1,97 @@
-module.exports = ($) => {
-    'use strict'
+'use strict'
 
-    $.gulp.task('jade-dist', () =>
-        $.gulp
+import utils from '../utils.js'
+
+module.exports = ($, config, gulp) => {
+
+    const CLIENT_PATH = config.paths.client.base;
+    const DEPLOY_PATH = config.paths.deploy.base;
+    const DIST_PATH = config.paths.dist.base;
+
+    gulp.task('jade:dist', () =>
+        gulp
         .src([
-            `${$.client.dir}/**/*.jade`,
-            `!${$.client.dir}/**/_**/*.jade`,
-            `!${$.client.dir}/**/_*.jade`,
+            `${CLIENT_PATH}/**/*.jade`,
+            `!${CLIENT_PATH}/**/_**/*.jade`,
+            `!${CLIENT_PATH}/**/_*.jade`,
 
-            `!${$.client.guide}/**/*.jade`,
-            `!${$.client.dir}/guide.jade`
+            `!${config.paths.client.guide}/**/*.jade`,
+            `!${CLIENT_PATH}/guide.jade`
         ])
-        .pipe($.data((file) => $.fn.jsonJade(file)))
+        .pipe(config.paths.data((file) => utils.getTemplateData(file)))
         .pipe($.jade({
             pretty: false
         }))
         .on('error', (error) => {
             console.log(error);
         })
-        .pipe($.gulp.dest($.dist.dir))
+        .pipe(gulp.dest(DIST_PATH))
     )
 
-    $.gulp.task('styles-dist', () =>
-        $.gulp
-        .src(`${$.client.styles}/main.styl`)
-        .pipe($.styles({
+    gulp.task('styles:dist', () =>
+        gulp
+        .src(`${config.paths.client.styles}/main.styl`)
+        .pipe(config.paths.styles({
             compress: true
         }))
-        .pipe($.gulp.dest($.dist.styles))
+        .pipe(gulp.dest(config.paths.dist.styles))
     )
 
-    $.gulp.task('copyDeploy', (done) =>
-        $.gulp
+    gulp.task('copy:deploy', (done) =>
+        gulp
         .src([
-            `${$.deploy.dir}/**/*.*`,
-            `${$.deploy.vendor}/**/*.*`
+            `${DEPLOY_PATH}/**/*.*`,
+            `${config.paths.deploy.vendor}/**/*.*`
         ])
-        .pipe($.gulp.dest($.dist.dir))
+        .pipe(gulp.dest(DIST_PATH))
     )
 
-    $.gulp.task('generateOneScriptFile', (done) => {
+    gulp.task('generateOneScriptFile', (done) => {
         const assets = $.useref.assets()
 
-        return $.gulp
-        .src($.dist.index)
+        return gulp
+        .src(config.paths.dist.index)
         .pipe(assets)
         .pipe(assets.restore())
         .pipe($.useref())
-        .pipe($.gulp.dest($.dist.dir))
+        .pipe(gulp.dest(DIST_PATH))
     })
 
-    $.gulp.task('compress', () =>
-        $.gulp
-        .src(`${$.dist.dir}/**/*.js`)
+    gulp.task('compress', () =>
+        gulp
+        .src(`${DIST_PATH}/**/*.js`)
         .pipe($.uglify())
-        .pipe($.gulp.dest($.dist.dir))
+        .pipe(gulp.dest(DIST_PATH))
     )
 
-    $.gulp.task('clean-dist', (cb) =>
+    gulp.task('clean:dist', (cb) =>
         $.del([
-            $.deploy.dir,
-            $.dist.dir
+            DEPLOY_PATH,
+            DIST_PATH
         ], FORCE, cb)
     )
 
-    $.gulp.task('clean-min', (cb) =>
+    gulp.task('clean:min', (cb) =>
         $.del([
-            `${$.dist.js}/**/*.js`,
-            $.dist.vendor,
-            `!${$.dist.js}/all.js`,
-            `${$.dist.dir}/**/_*`,
-            `${$.dist.dir}/**/_**/**/*`
+            `${config.paths.dist.js}/**/*.js`,
+            config.paths.dist.vendor,
+            `!${config.paths.dist.js}/all.js`,
+            `${DIST_PATH}/**/_*`,
+            `${DIST_PATH}/**/_**/**/*`
         ], {
             force: true
         }, cb)
     )
 
-    $.gulp.task('templateCache-dist', (done) =>
-        $.gulp.src(`${$.dist.dir}/**/directives/**/*.html`)
+    gulp.task('templateCache:dist', (done) =>
+        gulp.src(`${DIST_PATH}/**/directives/**/*.html`)
         .pipe($.templateCache('templates.js', {
             standalone: true
         }))
-        .pipe($.gulp.dest($.dist.js))
+        .pipe(gulp.dest(config.paths.dist.js))
     )
 
-    $.gulp.task('webserver-dist', () => require(`../${$.server}/server-dist.js`)($))
+    gulp.task('webserver:dist', () => require(`../${config.paths.server}/server-dist.js`)(config))
 
-    $.gulp.task('distTask', (cb) => $.runSequence('generateOneScriptFile', 'compress', 'clean-min', cb))
+    gulp.task('dist', (cb) => $.runSequence('generateOneScriptFile', 'compress', 'clean:min', cb))
 }

@@ -1,19 +1,25 @@
-module.exports = ($) => {
-    'use strict'
+'use strict'
 
-    $.gulp.task('styles', () =>
-        $.gulp
+import stylus from 'stylus'
+
+module.exports = ($, config, gulp) => {
+
+    const CLIENT_PATH = config.paths.client.base;
+    const DEPLOY_PATH = config.paths.deploy.base;
+
+    gulp.task('styles', () =>
+        gulp
         .src([
-            `${$.client.dir}/**/*.styl`,
-            `!${$.client.dir}/**/_*.styl`,
-            `!${$.client.dir}/**/_**/**/*.styl`
+            `${CLIENT_PATH}/**/*.styl`,
+            `!${CLIENT_PATH}/**/_*.styl`,
+            `!${CLIENT_PATH}/**/_**/**/*.styl`
         ])
-        .pipe($.styles({
+        .pipe($.stylus({
             linenos: true
         }))
-        .pipe($.gulp.dest($.deploy.dir))
+        .pipe(gulp.dest(DEPLOY_PATH))
         .on('error', (error) => {
-            console.log(error)
+            console.log('ERROR STYLUS' + error);
         })
     )
 }

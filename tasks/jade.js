@@ -1,33 +1,39 @@
-module.exports = ($) => {
-    'use strict'
+'use strict'
 
-    $.gulp.task('jade', () =>
-        $.gulp
+import utils from '../utils.js'
+
+module.exports = ($, config, gulp) => {
+
+    const CLIENT_PATH = config.paths.client.base;
+    const DEPLOY_PATH = config.paths.deploy.base;
+
+    gulp.task('jade', () =>
+        gulp
         .src([
-            `${$.client.dir}/**/*.jade`,
-            `!${$.client.dir}/**/_*.jade`,
-            `!${$.client.dir}/**/_**/**/*.jade`
+            `${CLIENT_PATH}/**/*.jade`,
+            `!${CLIENT_PATH}/**/_*.jade`,
+            `!${CLIENT_PATH}/**/_**/**/*.jade`
         ])
-        .pipe($.changed($.deploy.dir, {extension: '.html'}))
-        .pipe($.data((file) => $.fn.jsonJade(file)))
+        .pipe($.changed(DEPLOY_PATH, {extension: '.html'}))
+        .pipe($.data((file) => utils.getTemplateData(file)))
         .pipe($.jade({
             pretty: true
         }))
         .on('error', (error) => {
             console.log(error)
         })
-        .pipe($.gulp.dest($.deploy.dir))
+        .pipe(gulp.dest(DEPLOY_PATH))
     )
 
-    $.gulp.task('jade-script', () =>
-        $.gulp
-        .src([`${$.client.dir}/**/_*.js`])
-        .pipe($.changed($.deploy.dir))
+    gulp.task('jade-script', () =>
+        gulp
+        .src([`${CLIENT_PATH}/**/_*.js`])
+        .pipe($.changed(DEPLOY_PATH))
         .pipe($.babel())
-        .pipe($.gulp.dest($.deploy.dir))
+        .pipe(gulp.dest(DEPLOY_PATH))
         .pipe($.data((fileJs) => {
             // JADE IN _DEPLOY
-            const FILE_JADE = fileJs.path
+            const JADE_FILE = fileJs.path
                 .replace(`${$.path.sep}_deploy`, `${$.path.sep}dev`)
                 .replace(`${$.path.sep}_`, $.path.sep)
                 .replace('.js', '.jade')
@@ -38,16 +44,16 @@ module.exports = ($) => {
             dirJade = dirJade.join($.path.sep)
 
             // COMPILE JADE
-            $.gulp
-            .src(FILE_JADE)
-            .pipe($.data((file) => $.fn.jsonJade(file)))
+            gulp
+            .src(JADE_FILE)
+            .pipe($.data((file) => utils.getTemplateData(file)))
             .pipe($.jade({
                 pretty: true
             }))
             .on('error', (error) => {
                 console.log(error)
             })
-            .pipe($.gulp.dest(dirJade))
+            .pipe(gulp.dest(dirJade))
         }))
     )
 }
