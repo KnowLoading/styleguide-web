@@ -4,9 +4,9 @@ module.exports = ($) => {
     $.gulp.task('jade', () =>
         $.gulp
         .src([
-            `${$.dev.dir}/**/*.jade`,
-            `!${$.dev.dir}/**/_*.jade`,
-            `!${$.dev.dir}/**/_**/**/*.jade`
+            `${$.client.dir}/**/*.jade`,
+            `!${$.client.dir}/**/_*.jade`,
+            `!${$.client.dir}/**/_**/**/*.jade`
         ])
         .pipe($.changed($.deploy.dir, {extension: '.html'}))
         .pipe($.data((file) => $.fn.jsonJade(file)))
@@ -21,7 +21,7 @@ module.exports = ($) => {
 
     $.gulp.task('jade-script', () =>
         $.gulp
-        .src([`${$.dev.dir}/**/_*.js`])
+        .src([`${$.client.dir}/**/_*.js`])
         .pipe($.changed($.deploy.dir))
         .pipe($.babel())
         .pipe($.gulp.dest($.deploy.dir))

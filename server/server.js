@@ -10,7 +10,7 @@ module.exports = ($) => {
     app
     .use($.connect({port: PORT_RELOAD}))
     .use($.express.static($.deploy.dir))
-    .use('/*', (req, res) => res.sendFile($.path.resolve(__dirname, `../../${$.deploy.dir}`)))
+    .use('/*', (req, res) => res.sendFile($.path.resolve(__dirname, `../${$.deploy.dir}`)))
     .use('/api', (req, res) =>
         req
         .pipe($.request(`http://api${req.path}`))

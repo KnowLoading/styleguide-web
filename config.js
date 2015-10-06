@@ -25,39 +25,39 @@ const $ = {
     useref: require('gulp-useref'),
     wrap: require('gulp-wrap'),
 
-    plato: './_analysis/plato',
+    plato: './.tmp/analysis/plato',
     server: './server',
     tasks: './tasks',
 
-    dev: {
-        assets: './dev/assets',
-        dir: './dev',
-        guide: './dev/guide',
-        styles: './dev/styles',
-        vendor: './dev/_vendor'
+    client: {
+        assets: './client/assets',
+        dir: './client',
+        guide: './client/guide',
+        styles: './client/styles',
+        vendor: './client/_vendor'
     },
 
     deploy: {
-        app: './_deploy/app',
-        assets: './_deploy/assets',
-        dir: './_deploy',
-        guide: './_deploy/guide',
-        guideIndex: './_deploy/guide.html',
-        index: './_deploy/index.html',
-        js: './_deploy/js',
-        styles: './_deploy/styles',
-        vendor: './_deploy/vendor',
-        views: './_deploy/views'
+        app: './.tmp/deploy/app',
+        assets: './.tmp/deploy/assets',
+        dir: './.tmp/deploy',
+        guide: './.tmp/deploy/guide',
+        guideIndex: './.tmp/deploy/guide.html',
+        index: './.tmp/deploy/index.html',
+        js: './.tmp/deploy/js',
+        styles: './.tmp/deploy/styles',
+        vendor: './.tmp/deploy/vendor',
+        views: './.tmp/deploy/views'
     },
 
     dist: {
-        allJs: './_public-dist/js/all.js',
-        app: './_public-dist/app',
-        dir: './_public-dist',
-        index: './_public-dist/index.html',
-        js: './_public-dist/js',
-        styles: './_public-dist/styles',
-        vendor: './_public-dist/vendor'
+        allJs: './dist/js/all.js',
+        app: './dist/app',
+        dir: './dist',
+        index: './dist/index.html',
+        js: './dist/js',
+        styles: './dist/styles',
+        vendor: './dist/vendor'
     },
 
     jsonData: {}
@@ -66,16 +66,13 @@ const $ = {
 $.fn = {
     jsonJade(file) {
         const NAME = file.path
-
         const FILEJADE = $.path.basename(NAME, '.jade')
 
         let dirname = $.path.dirname(NAME)
-        dirname = dirname.replace(`${$.path.sep}dev${$.path.sep}`, `${$.path.sep}deploy${$.path.sep}`)
+        dirname = dirname.replace(`${$.path.sep}client${$.path.sep}`, `${$.path.sep}deploy${$.path.sep}`)
 
         const ROUTE = $.path.resolve(__dirname, dirname, '_' + FILEJADE + '.js')
-
         const JSON_FILE = ($.fs.existsSync(ROUTE)) ? require(ROUTE) : {}
-
         delete require.cache[ROUTE]
 
         $.extend(true, $.jsonData, JSON_FILE)
@@ -85,7 +82,6 @@ $.fn = {
 
     readFolder(folder) {
         const PATH = $.path.join(__dirname, folder)
-
         const FILES = $.fs.readdirSync(PATH)
 
         FILES.forEach((file) => {

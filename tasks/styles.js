@@ -4,9 +4,9 @@ module.exports = ($) => {
     $.gulp.task('styles', () =>
         $.gulp
         .src([
-            `${$.dev.dir}/**/*.styl`,
-            `!${$.dev.dir}/**/_*.styl`,
-            `!${$.dev.dir}/**/_**/**/*.styl`
+            `${$.client.dir}/**/*.styl`,
+            `!${$.client.dir}/**/_*.styl`,
+            `!${$.client.dir}/**/_**/**/*.styl`
         ])
         .pipe($.styles({
             linenos: true

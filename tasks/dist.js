@@ -4,12 +4,12 @@ module.exports = ($) => {
     $.gulp.task('jade-dist', () =>
         $.gulp
         .src([
-            `${$.dev.dir}/**/*.jade`,
-            `!${$.dev.dir}/**/_**/*.jade`,
-            `!${$.dev.dir}/**/_*.jade`,
+            `${$.client.dir}/**/*.jade`,
+            `!${$.client.dir}/**/_**/*.jade`,
+            `!${$.client.dir}/**/_*.jade`,
 
-            `!${$.dev.guide}/**/*.jade`,
-            `!${$.dev.dir}/guide.jade`
+            `!${$.client.guide}/**/*.jade`,
+            `!${$.client.dir}/guide.jade`
         ])
         .pipe($.data((file) => $.fn.jsonJade(file)))
         .pipe($.jade({
@@ -23,7 +23,7 @@ module.exports = ($) => {
 
     $.gulp.task('styles-dist', () =>
         $.gulp
-        .src(`${$.dev.styles}/main.styl`)
+        .src(`${$.client.styles}/main.styl`)
         .pipe($.styles({
             compress: true
         }))

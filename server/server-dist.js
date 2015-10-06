@@ -8,7 +8,7 @@ module.exports = ($) => {
     // ROUTES
     app
     .use($.express.static($.dist.dir))
-    .use('/*', (req, res) => res.sendFile($.path.resolve(__dirname, `../../${$.dist.dir}`)))
+    .use('/*', (req, res) => res.sendFile($.path.resolve(__dirname, `../${$.dist.dir}`)))
     .use('/api', (req, res) =>
         req
         .pipe($.request(`http://api${req.path}`))

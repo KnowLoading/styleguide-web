@@ -13,19 +13,19 @@ module.exports = ($) => {
         })
     )
 
-    $.gulp.watch(`${$.dev.dir}/**/*.jade`, () => $.runSequence('jade', 'templateCache'))
+    $.gulp.watch(`${$.client.dir}/**/*.jade`, () => $.runSequence('jade', 'templateCache'))
 
     $.gulp.watch([
-        `${$.dev.dir}/**/*.js`,
-        `!${$.dev.dir}/**/_*.js`,
-        `!${$.dev.dir}/**/*.config.js`,
-        `!${$.dev.dir}/**/*.spec.js`
+        `${$.client.dir}/**/*.js`,
+        `!${$.client.dir}/**/_*.js`,
+        `!${$.client.dir}/**/*.config.js`,
+        `!${$.client.dir}/**/*.spec.js`
     ], ['scripts'])
 
-    $.gulp.watch(`${$.dev.dir}/**/_*.js`, ['jade-script'])
+    $.gulp.watch(`${$.client.dir}/**/_*.js`, ['jade-script'])
 
-    $.gulp.watch(`${$.dev.dir}/**/*.styl`, ['styles'])
+    $.gulp.watch(`${$.client.dir}/**/*.styl`, ['styles'])
 
-    $.gulp.watch(`${$.dev.guide}/**/*.styl`, ['styles-guide'])
-    $.gulp.watch(`${$.dev.serverTasks}/*.js`, ['compile'])
+    $.gulp.watch(`${$.client.guide}/**/*.styl`, ['styles-guide'])
+    $.gulp.watch(`${$.client.serverTasks}/*.js`, ['compile'])
 }

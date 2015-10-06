@@ -4,8 +4,8 @@ module.exports = ($) => {
     $.gulp.task('scripts-js-test', () =>
         $.gulp
         .src([
-            `${$.dev.dir}/**/*.config.js`,
-            `${$.dev.dir}/**/*.spec.js`
+            `${$.client.dir}/**/*.config.js`,
+            `${$.client.dir}/**/*.spec.js`
         ])
         .pipe($.changed($.deploy.dir))
         .pipe($.babel())
@@ -19,7 +19,7 @@ module.exports = ($) => {
     )
 
     $.gulp.watch([
-        `${$.dev.dir}/**/*.config.js`,
-        `${$.dev.dir}/**/*.spec.js`
+        `${$.client.dir}/**/*.config.js`,
+        `${$.client.dir}/**/*.spec.js`
     ], ['scripts-js-test'])
 }

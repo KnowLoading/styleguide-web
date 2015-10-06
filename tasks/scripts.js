@@ -4,9 +4,9 @@ module.exports = ($) => {
     $.gulp.task('scripts', () =>
         $.gulp
         .src([
-            `${$.dev.dir}/**/*.js`,
-            `!${$.dev.dir}/**/_*.js`,
-            `!${$.dev.dir}/**/_**/**/*.js`
+            `${$.client.dir}/**/*.js`,
+            `!${$.client.dir}/**/_*.js`,
+            `!${$.client.dir}/**/_**/**/*.js`
         ])
         .pipe($.changed($.deploy.dir))
         .pipe($.babel())
